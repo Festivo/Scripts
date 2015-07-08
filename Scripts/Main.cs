@@ -4550,6 +4550,25 @@ namespace Script
                         }
 	            	}
 	            	break;
+	            	
+	            	case 72: { // Entering No-Item Arena Runscript
+				for (int i = 1; i <= client.Player.MaxInv; i++){	
+				if (client.Player.Inventory[i].Num > 0) {
+				int slot = i;
+	            		int amount = client.Player.Inventory[slot].Amount;
+	            		int X = client.Player.Inventory[slot].Num;
+	            		string tag = client.Player.Inventory[slot].Tag;
+	            		int j = client.Player.FindBankSlot(X, amount);
+				if (j == -1) {
+	            Messenger.PlayerMsg(client, "The storage can't store all items!", Text.BrightRed);
+	            return;
+	            }
+				client.Player.TakeItemSlot(slot, amount, true);
+	            client.Player.GiveBankItem(X, amount, tag, j);
+				}
+				}
+				}
+                    break;
              
              
            }
