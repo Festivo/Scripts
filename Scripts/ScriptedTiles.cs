@@ -1089,6 +1089,53 @@ namespace Script
                             }
                         }
                         break;
+                    case 79: {// No-Item Arena
+                    if (client != null) {
+                    bool canEnter = true;
+                    for (int i = 1; i <= client.Player.MaxInv; i++) {
+                    if (client.Player.Inventory[i].Num > 0){
+                    bool held = false;
+		    
+		            if (!held) {
+                    canEnter = false;
+                    }
+		                        }
+		            }
+		            if (!canEnter) {
+	                Story story = new Story();
+                    StorySegment segment = new StorySegment();
+                    segment.Action = Enums.StoryAction.Say;
+                    segment.AddParameter("Text", "Notice:  You can not enter the arena with any items.");
+                    segment.AddParameter("Mugshot", "-1");
+                    segment.Parameters.Add("Speed", "0");
+                    segment.Parameters.Add("PauseLocation", "0");
+                    story.Segments.Add(segment);
+                                    
+                    segment = new StorySegment();
+		            segment.Action = Enums.StoryAction.AskQuestion;
+		            segment.AddParameter("Question", "Any items that you have will be sent to your storage. Is that OK?");
+		            segment.AddParameter("SegmentOnYes", (story.Segments.Count + 2).ToString());
+		            segment.AddParameter("SegmentOnNo", (story.Segments.Count + 3).ToString());
+	                segment.AddParameter("Mugshot", "-1");
+		            story.Segments.Add(segment);
+									
+		            segment = new StorySegment();
+		            segment.Action = Enums.StoryAction.RunScript;
+		            segment.AddParameter("ScriptIndex", "72");
+		            segment.AddParameter("ScriptParam1", param1);
+		            segment.AddParameter("ScriptParam2", param2);
+		            segment.AddParameter("ScriptParam3", param3);
+		            segment.AddParameter("Pause", "1");
+		            story.Segments.Add(segment);
+
+                    StoryManager.PlayStory(client, story);
+		    }
+		    else {
+	            EnterArena(client, character, map, param2, param3, hitlist);				
+		    }
+                    }
+                    }
+                    break;    
                     case 78: {// warp everyone to respective locations
                             if (client != null) {
 
@@ -1286,6 +1333,8 @@ namespace Script
                     return scriptNum + ": Spawn on Item Use";
                 case 78:
                     return scriptNum + ": Friendship Forest Warps";
+                case 79:
+                    return scriptNum + ": No-Item Arena";
                 default:
                     return scriptNum.ToString() + ": Unknown";
             }
