@@ -968,7 +968,22 @@ namespace Script
                         PacketHitList.MethodEnded(ref hitlist);
                         return true;
                     }
-
+                    if (attacker != character 
+                    && HasAbility(setup.Defender, "Aroma Veil")
+                    && statusParam[0] != "Taunt" 
+                    && statusParam[0] != "Torment"
+                    && statusParam[0] != "Encore"
+                    && statusParam[0] != "Attract"	
+                    && statusParam[0] != "HealBlock"	
+                    && statusParam[0] != "Disable"){
+                    if (msg) {
+                        hitlist.AddPacketToMap(map, PacketBuilder.CreateBattleMsg(character.Name + " is protected by Aroma Veil", Text.BrightCyan), character.X, character.Y, 10);
+                        }
+                            PacketHitList.MethodEnded(ref hitlist);
+                            return true;
+                        }
+                        
+                        
                     if (attacker != character && statusParam[0] != "Pause" && statusParam[0] != "Taunt" &&
                         statusParam[0] != "Torment" && statusParam[0] != "Encore" && statusParam[0] != "MoveSeal" &&
                         statusParam[0] != "Disable" && statusParam[0] != "PerishCount" && statusParam[0] != "Curse" &&
@@ -1250,7 +1265,15 @@ namespace Script
                                     PacketHitList.MethodEnded(ref hitlist);
                                     return true;
                                 }
-
+                                
+                                 if (HasAbility(character, "Sweet Veil") && !HasAbility(attacker, "Mold Breaker")) {
+                                    if (msg) {
+                                        hitlist.AddPacketToMap(map, PacketBuilder.CreateBattleMsg(character.Name + "'s Sweet Veil prevented it from falling asleep!", Text.WhiteSmoke), character.X, character.Y, 10);
+                                    }
+                                    PacketHitList.MethodEnded(ref hitlist);
+                                    return true;
+                                }
+                                
                                 if (HasAbility(character, "Vital Spirit") && !HasAbility(attacker, "Mold Breaker")) {
                                     if (msg) {
                                         hitlist.AddPacketToMap(map, PacketBuilder.CreateBattleMsg(character.Name + "'s Vital Spirit prevented it from falling asleep!", Text.WhiteSmoke), character.X, character.Y, 10);
@@ -1888,7 +1911,15 @@ namespace Script
                                 PacketHitList.MethodEnded(ref hitlist);
                                 return true;
                             }
-
+                            
+                            if (HasAbility(character, "Sweet Veil") && !HasAbility(attacker, "Mold Breaker")) {
+                                if (msg) {
+                                    hitlist.AddPacketToMap(map, PacketBuilder.CreateBattleMsg(character.Name + " can't become drowsy due to Sweet Veil!", Text.BrightRed), character.X, character.Y, 10);
+                                }
+                                PacketHitList.MethodEnded(ref hitlist);
+                                return true;
+                            }
+                            
                             if (HasAbility(character, "Vital Spirit") && !HasAbility(attacker, "Mold Breaker")) {
                                 if (msg) {
                                     hitlist.AddPacketToMap(map, PacketBuilder.CreateBattleMsg(character.Name + " can't become drowsy due to Vital Spirit!", Text.BrightRed), character.X, character.Y, 10);
@@ -3937,6 +3968,33 @@ namespace Script
                     ChangeAttackBuff(setup.Attacker, setup.Defender, setup.AttackerMap, -1, setup.PacketStack);
                 }
             }
+            //Bulletproof
+if (HasAbility(setup.Defender, "Bulletproof") && !HasAbility(setup.Attacker, "Mold Breaker")) {
+if (setup.moveIndex == 624 || //Acid Spray
+setup.moveIndex == 70 || //Aura Sphere
+setup.moveIndex == 219 || //Barrage
+setup.moveIndex == 1 || //Bullet Seed
+setup.moveIndex == 71 || //Egg Bomb
+setup.moveIndex == 619 || //Electro Ball
+setup.moveIndex == 378 || //Energy Ball
+setup.moveIndex == 23 || //Focus Blast
+setup.moveIndex == 47 || //Gyro Ball
+setup.moveIndex == 429 || //Ice Ball
+setup.moveIndex == 391 || //Magnet Bomb
+setup.moveIndex == 375 || //Mist Ball
+setup.moveIndex == 150 || //Mud Bomb
+setup.moveIndex == 412 || //Octazooka
+setup.moveIndex == 427 || //Rock Wrecker
+setup.moveIndex == 678 || //Searing Shot
+setup.moveIndex == 65 || //Seed Bomb
+setup.moveIndex == 87 || //Shadow Ball
+setup.moveIndex == 300 || //Sludge Bomb
+setup.moveIndex == 446 || //Weather Ball
+setup.moveIndex == 252 ||){ // Zap Canon
+setup.Move.Accuracy = 0;
+setup.PacketStack.AddPacketToMap(setup.AttackerMap, PacketBuilder.CreateBattleMsg(setup.Defender.Name + " avoided damage with Bulletproof!", Text.WhiteSmoke), setup.Attacker.X, setup.Attacker.Y, 10);
+}		
+}
 
             if (HasAbility(setup.Defender, "Levitate") && IsGroundImmune(setup.Defender, setup.DefenderMap) && setup.Defender != setup.Attacker && !HasAbility(setup.Attacker, "Mold Breaker")) {
                 if (setup.Move.Element == Enums.PokemonType.Ground) {
